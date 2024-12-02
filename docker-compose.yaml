@@ -1,5 +1,5 @@
 services:
-  bolt-ai:
+  app-prod:
     image: bolt-ai:production
     build:
       context: .
@@ -27,13 +27,13 @@ services:
       - AMAZON_BEDROCK_SECRET_ACCESS_KEY=${AMAZON_BEDROCK_SECRET_ACCESS_KEY}
       - DEFAULT_NUM_CTX=${DEFAULT_NUM_CTX:-32768}
     extra_hosts:
-      - "host.docker.internal:host-gateway"      
+      - "host.docker.internal:host-gateway"
     command: pnpm run dockerstart
     # command: pnpm run dockerstartcool
     profiles:
-      - production  # This service only runs in the production profile
+      - production
 
-  bolt-ai-dev:
+  app-dev:
     image: bolt-ai:development
     build:
       target: bolt-ai-development
@@ -43,7 +43,7 @@ services:
       - VITE_HMR_HOST=localhost
       - VITE_HMR_PORT=5173
       - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true  
+      - WATCHPACK_POLLING=true
       - PORT=5173
       - GROQ_API_KEY=${GROQ_API_KEY}
       - HuggingFace_API_KEY=${HuggingFace_API_KEY}
@@ -59,7 +59,7 @@ services:
       - AMAZON_BEDROCK_ACCESS_KEY_ID=${AMAZON_BEDROCK_ACCESS_KEY_ID}
       - AMAZON_BEDROCK_SECRET_ACCESS_KEY=${AMAZON_BEDROCK_SECRET_ACCESS_KEY}
     extra_hosts:
-      - "host.docker.internal:host-gateway"      
+      - "host.docker.internal:host-gateway"
     volumes:
       - type: bind
         source: .
@@ -67,6 +67,6 @@ services:
         consistency: cached
       - /app/node_modules
     ports:
-      - "5173:5173"  # Same port, no conflict as only one runs at a time
+      - "5173:5173"
     command: pnpm run dev --host 0.0.0.0
-    profiles: ["development", "default"]  # Make development the default profile
+    profiles: ["development", "default"]

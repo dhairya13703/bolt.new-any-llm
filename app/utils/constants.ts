@@ -298,6 +298,12 @@ const getOllamaBaseUrl = () => {
 };
 
 async function getOllamaModels(): Promise<ModelInfo[]> {
+  /*
+   * if (typeof window === 'undefined') {
+   * return [];
+   * }
+   */
+
   try {
     const baseUrl = getOllamaBaseUrl();
     const response = await fetch(`${baseUrl}/api/tags`);
@@ -309,8 +315,8 @@ async function getOllamaModels(): Promise<ModelInfo[]> {
       provider: 'Ollama',
       maxTokenAllowed: 8000,
     }));
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
+    console.error('Error getting Ollama models:', e);
     return [];
   }
 }
@@ -336,8 +342,8 @@ async function getOpenAILikeModels(): Promise<ModelInfo[]> {
       label: model.id,
       provider: 'OpenAILike',
     }));
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
+    console.error('Error getting OpenAILike models:', e);
     return [];
   }
 }
@@ -376,6 +382,10 @@ async function getOpenRouterModels(): Promise<ModelInfo[]> {
 }
 
 async function getLMStudioModels(): Promise<ModelInfo[]> {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
   try {
     const baseUrl = import.meta.env.LMSTUDIO_API_BASE_URL || 'http://localhost:1234';
     const response = await fetch(`${baseUrl}/v1/models`);
@@ -386,8 +396,8 @@ async function getLMStudioModels(): Promise<ModelInfo[]> {
       label: model.id,
       provider: 'LMStudio',
     }));
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
+    console.error('Error getting LMStudio models:', e);
     return [];
   }
 }
